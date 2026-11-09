@@ -144,6 +144,9 @@ fn copyexit(child: Pid) -> ! {
     let flag = None;
     process::exit(match wait::waitpid(child, flag) {
         Ok(WaitStatus::Exited(_pid, code)) => code,
+        Ok(WaitStatus::Signaled(_pid, signal, _)) => {
+            128 + signal as i32
+        }
         _ => 0,
     });
 }
